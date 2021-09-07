@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>CodePen Demo</title>
+</head>
+<body>
+  <div>
+    When using toDataURL() to copy an image from the canvas of pixi.js, the y flip phenomenon will appear on the safari browser. However, everything works fine on Google Chrome on PC. <br>
+  issues
+  <a href="https://github.com/pixijs/pixijs/issues/2283">https://github.com/pixijs/pixijs/issues/2283</a><br>
+  
+</div>
+  Original
+  <div id="original"></div>
+  app.view.toDataURL()
+  <div>
+    <img id="toDataURL"></img>
+  </div>
+  app.renderer.extract.base64()
+  <div>
+    <img id="extract_base64"></img>
+  </div>
+
+  <div>
+  When using pixi.js, specify the canvas and context. Set premultipliedAlpha to True to solve this problem.
+  When using safari to view this page, everything is as you wish.
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/6.1.2/browser/pixi.min.js"></script>
+  <script>
+    let opt = {
+      premultipliedAlpha: true,
+      stencil: true,
+    };
+    var canvas = document.createElement("canvas");
+    let context = canvas.getContext("webgl2", opt) || canvas.getContext("webgl1", opt) || canvas.getContext('experimental-webgl', opt);
+    var app = new PIXI.Application({ view: canvas, width: 300, height: 200, backgroundColor: 0x1099bb, preserveDrawingBuffer: true });
+    app.renderer.gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL = true;
+    document.getElementById('original').appendChild(app.view);
+
+    var bunny = PIXI.Sprite.from('https://pixijs.io/examples/examples/assets/bunny.png');
+    bunny.anchor.set(0.5);
+    bunny.x = app.screen.width / 2;
+    bunny.y = app.screen.height / 2;
+    app.stage.addChild(bunny);
+
+    bunny.texture.baseTexture.once('loaded', function () {
+      app.render(app);
+      document.getElementById("toDataURL").src = app.view.toDataURL();
+      document.getElementById("extract_base64").src = app.renderer.extract.base64();
+    });
+
+  </script>
+</body>
+</html>
