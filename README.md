@@ -12,3 +12,5 @@ When using pixi.js, specify the canvas and context.
 Set premultipliedAlpha to True to solve this problem.
 
 When using safari to view this index.html, everything is as you wish.
+
+use safari to check this [demo](https://linyuuki.github.io/solve-safari-canvas-flip-Y/)
